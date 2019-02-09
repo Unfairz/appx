@@ -3,24 +3,24 @@
 
 - name: update all packages
   yum:
-  name: *
-  state: latest
-  update_cache: yes
+    name: "*"
+    state: latest
+    update_cache: yes
 
 - name: install epel-release
   yum:
-  name: epel-release
-  state: present
+    name: epel-release
+    state: present
 
 - name: install pre-defined packages / system wise
-  yum: {{ common }}
-  state: installed
-  with_items: {{ common }}
+  yum: "{{ common }}"
+     state: "installed"
+     with_items: "{{ common }}"
 
 - name: install KVM packages and KVM customize
-  yum: {{ kvm }}
-  state: installed
-  with_items: {{ kvm }}
+  yum: "{{ kvm }}"
+    state: "installed"
+    with_items: "{{ kvm }}"
 
 - name: disabled and mask firewalld
   systemd:
@@ -45,34 +45,32 @@
     regexp: '^SELINUX='
     line: 'SELINUX=disabled'
 
-- name: add the gpg key for the docker repo
-  rpm_key:
-  key: {{ docker.gpg_key }}
-  state: present
+- name: add docker-ce-stable repo
+  yum_repository:
+    name: docker-ce-stable
+    description: docker-ce stable repo
+    file: docker-ce-stable
+    baseurl: https://download.docker.com/linux/centos/7/$basearch/stable
+    enabled: yes
+    gpgcheck: yes
+    repo_gpgcheck: yes
+    gpgkey: https://download.docker.com/linux/centos/gpg
 
-- name: add docker repo from the remote url
-  get_url:
-  url: {{ docker.repo_url }}
-  dest: {{ docker.repo_path }}
-  mode: 0644
-
-
-- name: install the docker packages
+- name: Install Docker Pakages
   yum:
-  name: {{ docker.packages }}
-  state: installed
-  update_cache: yes
-  with_items: {{ docker.packages }}
+    name: "{{ docker.packages }}"
+    state: "installed"
+    with_items: "{{ docker.packages }}"
 
 - name: install pip
- easy_install:
- name: pip
- state: latest
+  easy_install:
+    name: pip
+    state: latest
 
 - name: install the python packages
   pip:
-  name: {{ docker.pip }}
-  with_items: {{ docker.pip }}
+    name: "{{ docker.pip }}"
+    with_items: "{{ docker.pip }}"
 
 - name: make sure docker is started and enabled
   systemd:

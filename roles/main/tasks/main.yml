@@ -13,14 +13,16 @@
     state: present
 
 - name: install pre-defined packages / system wise
-  yum: "{{ common }}"
-     state: "installed"
-     with_items: "{{ common }}"
-
-- name: install KVM packages and KVM customize
-  yum: "{{ kvm }}"
+  yum: 
+    name: "{{ common }}"
     state: "installed"
-    with_items: "{{ kvm }}"
+  with_items: "{{ common }}"
+  
+- name: install KVM packages and KVM customize
+  yum: 
+    name: "{{ kvm }}"
+    state: "installed"
+  with_items: "{{ kvm }}"
 
 - name: disabled and mask firewalld
   systemd:
@@ -60,7 +62,7 @@
   yum:
     name: "{{ docker.packages }}"
     state: "installed"
-    with_items: "{{ docker.packages }}"
+  with_items: "{{ docker.packages }}"
 
 - name: install pip
   easy_install:

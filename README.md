@@ -17,7 +17,7 @@ Taks that needed to be completed:
   - install docker / enable / start
   - install and configure iptables
 
-# [checkbox:unchecked] 2. Setup role for VPS installation.
+ [checkbox:unchecked] 2. Setup role for VPS installation.
   --- they will be kvm based with 3 variables and 3 operating systems. Networking and exposure will be hard but will be NAT-ed probably.
   --- Qcow2 based image for easy store, would need to be changed over to LVM in the future for faster I/O
   --- Resize of images. This can be quite nieche to do as the VM needs to be shutdown -> Resize -> Login -> xfs_growfs / -D with new size.

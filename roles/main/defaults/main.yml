@@ -3,13 +3,13 @@
 
 common:
  - git
- - vim-enchanced
  - htop
  - nano
  - zip
  - unzip
  - wget
  - net-tools
+ - iptables-services
 
 kvm:
  - qemu-kvm
@@ -25,6 +25,7 @@ kvm:
  - xorg-x11-xauth
  - xorg-x11-fonts-*
  - xorg-x11-utils
+ - guestfish
 
 docker:
   packages:

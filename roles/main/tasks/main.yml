@@ -24,29 +24,6 @@
     state: "installed"
   with_items: "{{ kvm }}"
 
-- name: disabled and mask firewalld
-  systemd:
-    name: firewalld
-    enabled: no
-    state: stopped
-    masked: yes
-
-- name: just force systemd to reread configs
-  systemd: daemon_reload=yes
-
-- name: make sure libvitd is started and enabled
-  systemd:
-    name: libvirtd
-    enabled: yes
-    state: started
-    masked: no
-
-- name: Disable selinux
-  lineinfile:
-    destfile: /etc/selinux/config
-    regexp: '^SELINUX='
-    line: 'SELINUX=disabled'
-
 - name: add docker-ce-stable repo
   yum_repository:
     name: docker-ce-stable
@@ -64,19 +41,39 @@
     state: "installed"
   with_items: "{{ docker.packages }}"
 
-- name: install pip
-  easy_install:
-    name: pip
-    state: latest
+- name: Disable selinux
+  lineinfile:
+    destfile: /etc/selinux/config
+    regexp: '^SELINUX='
+    line: 'SELINUX=disabled'
 
-- name: install the python packages
-  pip:
-    name: "{{ docker.pip }}"
-    with_items: "{{ docker.pip }}"
+- name: disabled and mask firewalld
+  systemd:
+    name: firewalld
+    enabled: no
+    state: stopped
+    masked: yes
 
-- name: make sure docker is started and enabled
+- name: start / enable iptables
+  systemd:
+    name: iptables
+    enabled: yes
+    masked: no
+    state: started
+
+- name: start / enable docker
   systemd:
     name: docker
     enabled: yes
     state: started
     masked: no
+
+- name: start / enable libvirtd
+  systemd:
+    name: libvirtd
+    enabled: yes
+    state: started
+    masked: no
+
+- name: just force systemd to reread configs
+  systemd: daemon_reload=yes

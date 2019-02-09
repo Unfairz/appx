@@ -6,7 +6,7 @@ Taks that needed to be completed:
 
 -----
 
-# [checkbox:checked] 1. Use ansible to automate package installation and put the system in a "ready" state for deployments.
+[x] 1. Use ansible to automate package installation and put the system in a "ready" state for deployments.
   - system update
   - system upgrade
   - qemu-kvm qemu-img virt-manager libvirt libvirt-python libvirt-client virt-install virt-viewer bridge-utils

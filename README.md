@@ -2,7 +2,7 @@
 
 The main goal of this project is to automate the deployment of both docker containers and virtuam machines using KVM.
 
-Taks that needed to be completed:
+Tasks that need to be completed:
 
 -----
 

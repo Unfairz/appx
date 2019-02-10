@@ -18,10 +18,10 @@ Tasks that need to be completed:
   - install and configure iptables
 
 - [x] 2. Setup Ansible playbooks for VM creation.
-  - [x]they will be kvm based with 3 variables and 3 operating systems. Networking and exposure will be hard but will be NAT-ed probably.
-  - [x]Qcow2 based image for easy store, would need to be changed over to LVM in the future for faster I/O
-  - [ ]Resize of images. This can be quite nieche to do as the VM needs to be shutdown -> Resize -> Login -> xfs_growfs / -D with new size.
-  - [ ]make a bash script for port exposure over NAT. e.g if httpd is installed on VM1 with IP 192.168.122.200 -> would need to export port on the main dedi to a new port which is not used. -> iptables -t nat -I PREROUTING -p tcp --dport 80 -j DNAT --to 192.168.111.36:(4444) // need to keep track of the ports.
+  - [x] They will be kvm based with 3 variables and 3 operating systems. Networking and exposure will be hard but will be NAT-ed probably.
+  - [x] Qcow2 based image for easy store, would need to be changed over to LVM in the future for faster I/O
+  - [ ] Resize of images. This can be quite nieche to do as the VM needs to be shutdown -> Resize -> Login -> xfs_growfs / -D with new size.
+  - [ ] make a bash script for port exposure over NAT. e.g if httpd is installed on VM1 with IP 192.168.122.200 -> would need to export port on the main dedi to a new port which is not used. -> iptables -t nat -I PREROUTING -p tcp --dport 80 -j DNAT --to 192.168.111.36:(4444) // need to keep track of the ports.
 
 - [ ] 3. Setup Jenkins in order to run jobs for VPS installation.
 

@@ -1,0 +1,26 @@
+---
+# tasks file for roles/testing
+
+- name: generate random string
+  command: openssl rand -base64 3
+  register: result
+
+- name: register rand as fact
+  set_fact:
+    rand_gb_var: "{{ result.stdout }}"
+
+- debug: msg={{ rand_gb_var }}
+
+
+- name: define vms
+  virt:
+    name: "{{ item.name }}"
+    command: define
+    xml: "{{ lookup('template', 'vm-definition.xml.j2') }} "
+  with_items: "{{ vms }} "
+
+- name: start vm
+  virt:
+      name: "{{ item.name }}"
+      state: running
+  with_items: "{{ vms }} "

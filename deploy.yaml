@@ -7,3 +7,4 @@
 
   roles:
   - roles/main
+  - roles/kvm

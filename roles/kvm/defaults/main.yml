@@ -1,0 +1,7 @@
+---
+# defaults file for roles/testing
+vms:
+  - name: web
+    memory: 512
+    vcpu: 1
+    network: default

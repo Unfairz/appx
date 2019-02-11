@@ -1,0 +1,35 @@
+<domain type='qemu'>
+  <name>{{ item.name}}</name>
+  <memory unit='MB'>{{ item.memory }}</memory>
+  <vcpu>{{ item.vcpu }}</vcpu>
+  <os>
+    <type>hvm</type>
+    <boot dev='network'/>
+    <boot dev='hd'/>
+    <bootmenu enabled='yes'/>
+  </os>
+  <features>
+    <acpi/>
+    <apic/>
+  </features>
+  <devices>
+    <graphics type='spice' autoport='yes'/>
+    <disk type='file' device='disk'>
+      <driver name='qemu' type='qcow2'/>
+      <source file='/var/lib/libvirt/images/{{ item.name }}.qcow2'/>
+      <target dev='vda' bus='virtio'/>
+      <alias name='virtio-disk0'/>
+      <address type='pci' domain='0x0000' bus='0x00' slot='0x07' function='0x0'/>
+    </disk>
+    <interface type='network'>
+      <source network='default' bridge='virbr0'/>
+      <target dev='vnet0'/>
+      <model type='virtio'/>
+      <alias name='net0'/>
+      <address type='pci' domain='0x0000' bus='0x00' slot='0x03' function='0x0'/>
+    </interface>
+    <console type='pty'>
+      <target type='serial' port='0'/>
+    </console>
+  </devices>
+</domain>

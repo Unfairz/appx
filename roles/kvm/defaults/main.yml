@@ -1,7 +1,7 @@
 ---
 # defaults file for roles/testing
 vms:
-  - name: web
+  - name: web-{{ rand_gb_var }} 
     memory: 512
     vcpu: 1
     network: default

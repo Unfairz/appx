@@ -1,7 +1,7 @@
 ---
 # tasks file for roles/testing
 
-- name: generate random string
+- name: generate random string for vm name
   command: openssl rand -base64 3
   register: result
 
@@ -9,18 +9,28 @@
   set_fact:
     rand_gb_var: "{{ result.stdout }}"
 
-- debug: msg={{ rand_gb_var }}
+- name: download vm image and  move to pool
+  get_url:
+    url: https://cloud.centos.org/centos/7/images/CentOS-7-x86_64-GenericCloud-1811.qcow2
+    dest: /var/lib/libvirt/images/{{ item.name }}.qcow2
+    owner: qemu
+    group: qemu
+  with_items: "{{ vms }}"
 
+- name: remove cloudinit and change root password
+  command: virt-customize -a /var/lib/libvirt/images/{{ item.name }}.qcow2 --root-password password:changeme --uninstall cloud-init
+  register: result
+  with_items: "{{ vms }}"
 
 - name: define vms
   virt:
     name: "{{ item.name }}"
     command: define
     xml: "{{ lookup('template', 'vm-definition.xml.j2') }} "
-  with_items: "{{ vms }} "
+  with_items: "{{ vms }}"
 
 - name: start vm
   virt:
       name: "{{ item.name }}"
       state: running
-  with_items: "{{ vms }} "
+  with_items: "{{ vms }}"

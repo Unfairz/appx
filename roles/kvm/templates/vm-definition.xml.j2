@@ -1,4 +1,4 @@
-<domain type='qemu'>
+<domain type='kvm'>
   <name>{{ item.name}}</name>
   <memory unit='MB'>{{ item.memory }}</memory>
   <vcpu>{{ item.vcpu }}</vcpu>
@@ -22,11 +22,12 @@
       <address type='pci' domain='0x0000' bus='0x00' slot='0x07' function='0x0'/>
     </disk>
     <interface type='network'>
+      <mac address='{{ vm_mac }}'/>
       <source network='default' bridge='virbr0'/>
       <target dev='vnet0'/>
-      <model type='virtio'/>
+      <model type='rtl8139'/>
       <alias name='net0'/>
-      <address type='pci' domain='0x0000' bus='0x00' slot='0x03' function='0x0'/>
+      <address type='pci' domain='0x0000' bus='0x00' slot='0x03' function='0x0'/>    
     </interface>
     <console type='pty'>
       <target type='serial' port='0'/>

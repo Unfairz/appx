@@ -1,7 +1,25 @@
 ---
 # defaults file for roles/testing
-vms:
-  - name: web-{{ rand_gb_var }} 
-    memory: 512
-    vcpu: 1
-    network: default
+
+vm_location: "/var/lib/libvirt/images/"
+root_pass: "changeme"
+
+guests:
+  small:
+    name: small-{{ rand_gb_var }}
+    mem: 1024
+    cpus: 1
+    os_type: rhel7
+    file_type: qcow2
+  large:
+    name: large-{{ rand_gb_var }}
+    mem: 2048
+    cpus: 2
+    os_type: rhel7
+    file_type: qcow2
+  XL:
+    name: small-{{ rand_gb_var }}
+    mem: 4096
+    cpus: 4
+    os_type: rhel7
+    file_type: qcow2

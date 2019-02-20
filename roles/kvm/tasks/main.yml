@@ -21,12 +21,14 @@
   command: "ls {{ vm_location }}"
   register: disks
   changed_when: "disks.rc != 0"
+  become: yes
   tags:
    - small
    - large
    - XL
 
 - name: Create a small VM disk
+  become: yes
   command: >
            virt-builder --format qcow2 centos-7.6
            -o {{ vm_location }}/{{ guests.small.name }}.{{ guests.small.file_type }}
@@ -36,6 +38,7 @@
     - small
 
 - name: Get list of all VMs
+  become: yes
   virt:
     command: "list_vms"
   register: vms
@@ -45,6 +48,7 @@
     - XL
 
 - name: Creating a small VM
+  become: yes
   command: >
            virt-install --import --name {{ guests.small.name }}
            --memory {{ guests.small.mem }} --vcpus {{ guests.small.cpus }}
@@ -53,3 +57,30 @@
   when: guests.small.name not in vms
   tags:
     - small
+
+- name: Sleep for 30 seconds.
+  shell: sleep 30
+
+- name: Get VM IP
+  become: yes
+  shell: virsh domifaddr {{ guests.small.name }} |  awk '{print $4}' | tail -n 2 | head -n 1 | cut -d '/' -f 1
+  register: ip
+  tags:
+    - ip
+
+- name: Save VM IP
+  become: yes
+  set_fact:
+    vm_ip: "{{ ip.stdout }}"
+  tags:
+    - small
+    - large
+    - XL
+    - ip
+
+- name: Send VM IP
+  debug:
+    msg: "Your VM IP address is: {{ vm_ip }}"
+  when: vm_ip is defined
+  tags:
+    - ip

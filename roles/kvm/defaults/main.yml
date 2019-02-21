@@ -3,6 +3,8 @@
 
 vm_location: "/var/lib/libvirt/images/"
 root_pass: "changeme"
+slack_token: "TG2TQ4J9J/BGBRNJT25/U40jr1DZTNCiibCmgUeeZHfw"
+
 
 guests:
   small:
@@ -18,7 +20,7 @@ guests:
     os_type: rhel7
     file_type: qcow2
   XL:
-    name: small-{{ rand_gb_var }}
+    name: XL-{{ rand_gb_var }}
     mem: 4096
     cpus: 4
     os_type: rhel7

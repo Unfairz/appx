@@ -1,21 +1,29 @@
 ---
-# tasks file for roles/testing
+# tasks file for VM Deployment
+
+#############################################
+#                Small VM                   #
+#############################################
 
 - name: Generate random string for VM name
   command: openssl rand -base64 3
   register: result
   tags:
     - small
-    - large
-    - XL
 
 - name: Factor random
   set_fact:
     rand_gb_var: "{{ result.stdout }}"
   tags:
     - small
-    - large
-    - XL
+
+- name: Notify Deployment begin
+  slack:
+    token: "{{ slack_token }}"
+    msg: "VM Deployment has begun. Your Small VM will be ready soon and its name will be - {{ guests.small.name }} "
+    channel: '#general'
+  tags:
+    - small
 
 - name: Get VM disks
   command: "ls {{ vm_location }}"
@@ -23,9 +31,7 @@
   changed_when: "disks.rc != 0"
   become: yes
   tags:
-   - small
-   - large
-   - XL
+    - small
 
 - name: Create a small VM disk
   become: yes
@@ -37,6 +43,14 @@
   tags:
     - small
 
+- name: Send Disk Created Notification  
+  slack:
+    token: "{{ slack_token }}"
+    msg: "VM Disk successfully created! "
+    channel: '#general'
+  tags:
+    - small
+
 - name: Get list of all VMs
   become: yes
   virt:
@@ -44,8 +58,6 @@
   register: vms
   tags:
     - small
-    - large
-    - XL
 
 - name: Creating a small VM
   become: yes
@@ -60,13 +72,15 @@
 
 - name: Sleep for 30 seconds.
   shell: sleep 30
+  tags:
+    - small
 
 - name: Get VM IP
   become: yes
   shell: virsh domifaddr {{ guests.small.name }} |  awk '{print $4}' | tail -n 2 | head -n 1 | cut -d '/' -f 1
   register: ip
   tags:
-    - ip
+    - small
 
 - name: Save VM IP
   become: yes
@@ -74,13 +88,202 @@
     vm_ip: "{{ ip.stdout }}"
   tags:
     - small
-    - large
-    - XL
-    - ip
 
 - name: Send VM IP
-  debug:
-    msg: "Your VM IP address is: {{ vm_ip }}"
-  when: vm_ip is defined
+  slack:
+    token: "{{ slack_token }}"
+    msg: "VM Deployment was completed. VM IP address is - {{ vm_ip }}"
+    channel: '#general'
   tags:
-    - ip
+    - small
+
+#############################################
+#      	       	 Large VM      	      	    #
+#############################################
+
+- name: Generate random string for VM name
+  command: openssl rand -base64 3
+  register: result
+  tags:
+    - large
+
+- name: Factor random
+  set_fact:
+    rand_gb_var: "{{ result.stdout }}"
+  tags:
+    - large
+
+- name: Notify Deployment begin
+  slack:
+    token: "{{ slack_token }}"
+    msg: "VM Deployment has begun. Your Large VM will be ready soon and its name will be - {{ guests.large.name }}"
+    channel: '#general'
+  tags:
+    - large
+
+- name: Get VM disks
+  command: "ls {{ vm_location }}"
+  register: disks
+  changed_when: "disks.rc != 0"
+  become: yes
+  tags:
+   - large
+
+- name: Create a small VM disk
+  become: yes
+  command: >
+           virt-builder --format qcow2 centos-7.6
+           -o {{ vm_location }}/{{ guests.large.name }}.{{ guests.large.file_type }}
+           --root-password password:{{ root_pass }}
+  when: guests.large.name not in disks.stdout
+  tags:
+    - large
+
+- name: Send Disk Created Notification
+  slack:
+    token: "{{ slack_token }}"
+    msg: "VM Disk successfully created! "
+    channel: '#general'
+  tags:
+    - large
+
+- name: Get list of all VMs
+  become: yes
+  virt:
+    command: "list_vms"
+  register: vms
+  tags:
+    - large
+
+- name: Creating a large VM
+  become: yes
+  command: >
+           virt-install --import --name {{ guests.large.name }}
+           --memory {{ guests.large.mem }} --vcpus {{ guests.large.cpus }}
+           --disk {{ vm_location }}/{{ guests.large.name }}.{{ guests.large.file_type }}
+           --noautoconsole --os-variant {{ guests.large.os_type }}
+  when: guests.large.name not in vms
+  tags:
+    - large
+
+- name: Sleep for 30 seconds.
+  shell: sleep 30
+  tags:
+    - large
+
+- name: Get VM IP
+  become: yes
+  shell: virsh domifaddr {{ guests.large.name }} |  awk '{print $4}' | tail -n 2 | head -n 1 | cut -d '/' -f 1
+  register: ip
+  tags:
+    - large
+
+- name: Save VM IP
+  become: yes
+  set_fact:
+    vm_ip: "{{ ip.stdout }}"
+  tags:
+    - large
+
+- name: Send VM IP
+  slack:
+    token: "{{ slack_token }}"
+    msg: "VM Deployment was completed. VM IP address is - {{ vm_ip }}"
+    channel: '#general'
+  tags:
+    - large
+
+#############################################
+#      	       	 XL VM      	      	    #
+#############################################
+- name: Generate random string for VM name
+  command: openssl rand -base64 3
+  register: result
+  tags:
+    - XL
+
+- name: Factor random
+  set_fact:
+    rand_gb_var: "{{ result.stdout }}"
+  tags:
+    - XL
+
+- name: Notify Deployment begin
+  slack:
+    token: "{{ slack_token }}"
+    msg: "VM Deployment has begun. Your XL VM will be ready soon and its name will be - {{ guests.XL.name }}"
+    channel: '#general'
+  tags:
+    - XL
+
+- name: Get VM disks
+  command: "ls {{ vm_location }}"
+  register: disks
+  changed_when: "disks.rc != 0"
+  become: yes
+  tags:
+   - XL
+
+- name: Create a small VM disk
+  become: yes
+  command: >
+           virt-builder --format qcow2 centos-7.6
+           -o {{ vm_location }}/{{ guests.XL.name }}.{{ guests.XL.file_type }}
+           --root-password password:{{ root_pass }}
+  when: guests.XL.name not in disks.stdout
+  tags:
+    - XL
+
+- name: Send Disk Created Notification
+  slack:
+    token: "{{ slack_token }}"
+    msg: "VM Disk successfully created! "
+    channel: '#general'
+  tags:
+    - XL
+
+- name: Get list of all VMs
+  become: yes
+  virt:
+    command: "list_vms"
+  register: vms
+  tags:
+    - XL
+
+- name: Creating a XL VM
+  become: yes
+  command: >
+           virt-install --import --name {{ guests.XL.name }}
+           --memory {{ guests.XL.mem }} --vcpus {{ guests.XL.cpus }}
+           --disk {{ vm_location }}/{{ guests.XL.name }}.{{ guests.XL.file_type }}
+           --noautoconsole --os-variant {{ guests.XL.os_type }}
+  when: guests.XL.name not in vms
+  tags:
+    - XL
+
+- name: Sleep for 30 seconds.
+  shell: sleep 30
+  tags:
+    - XL
+
+- name: Get VM IP
+  become: yes
+  shell: virsh domifaddr {{ guests.XL.name }} |  awk '{print $4}' | tail -n 2 | head -n 1 | cut -d '/' -f 1
+  register: ip
+  tags:
+    - XL
+
+- name: Save VM IP
+  become: yes
+  set_fact:
+    vm_ip: "{{ ip.stdout }}"
+  tags:
+    - XL
+
+- name: Send VM IP
+  slack:
+    token: "{{ slack_token }}"
+    msg: "VM Deployment was completed. VM IP address is - {{ vm_ip }}"
+    channel: '#general'
+  tags:
+    - XL

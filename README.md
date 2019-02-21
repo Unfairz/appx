@@ -34,7 +34,7 @@ Tasks that need to be completed:
 - [ ] 5. Setup Exim / Dovecot / Webmail
   - Would most likely be a cluster of containers handling emails and have a bash script automate some of the processes inside the containers.
 
-- [ ] 6. Slack
+- [x] 6. Slack
   - Add slack webhooks for handling and easy managment without the requirmenet of SSHing and running ansible playbooks / commands.
   - e.g In the channel I will create just send "Create VM 2 512 CentOS" which will spin a VM with 2 cores and 512 RAM with CentOS as operating system and send the info to the request 'Your VM has been created and has an IP 192.168.122.*' and SSH port exposed on {publicIP}:4444(example)
   - e.g For containers it would be the same as above with slight changes to the outputs / inputs which I am yet to think of.

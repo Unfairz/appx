@@ -29,7 +29,7 @@ Tasks that need to be completed:
   - would need to have images created customly but that is in a later period (TODO)
   - VNC for containers that have a GUI will need to be exposed as well.
 
-- [ ] 4. Setup Ansible AWX for GUI managment.
+- [x] 4. Setup Ansible AWX for GUI managment.
 
 - [ ] 5. Setup Exim / Dovecot / Webmail
   - Would most likely be a cluster of containers handling emails and have a bash script automate some of the processes inside the containers.

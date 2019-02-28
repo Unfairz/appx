@@ -8,7 +8,7 @@
 - name: Notify Deployment begin
   slack:
     token: "{{ slack_token }}"
-    msg: "AWX VM Deployment has begun. Your VM will be ready soon and its name will be {{ vm_name }} with specs - RAM: {{mem}} CPU: {{cpus}}"
+    msg: "AWX Deployment has begun. Your VM will be ready soon with name: {{ vm_name }} and specs: RAM - {{mem}} CPU - {{cpus}}"
     channel: '#general'
 
 - name: Get VM disks
@@ -28,7 +28,7 @@
 - name: Send Disk Created Notification  
   slack:
     token: "{{ slack_token }}"
-    msg: "VM Disk successfully created! "
+    msg: "VM Disk successfully created!"
     channel: '#general'
 
 - name: Get list of all VMs
@@ -62,5 +62,5 @@
 - name: Send VM IP
   slack:
     token: "{{ slack_token }}"
-    msg: "VM Deployment was completed. VM IP address is - {{ vm_ip }}"
+    msg: "AWX Deployment was completed. VM IP address is - {{ vm_ip }}"
     channel: '#general'

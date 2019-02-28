@@ -1,9 +1,9 @@
 ---
 
-- hosts: 127.0.0.1
+- hosts: vmhost
   gather_facts: true
-  connection: local
-
+  become: yes
+  become_method: sudo
 
   roles:
   - roles/kvm

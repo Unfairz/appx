@@ -87,5 +87,5 @@
   become: yes
   slack:
     token: "{{ slack_token }}"
-    msg: "NAT Rules have been added. SSH using {{ vm_ip }} -p {{nat_port}}. Have fun!"
+    msg: "NAT Rules have been added. SSH using root@{{server_ip}} -p {{nat_port}} with default password - {{root_pass}}. Have fun!"
     channel: '#general'

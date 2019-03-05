@@ -4,7 +4,7 @@
 vm_location: "/var/lib/libvirt/images/"
 root_pass: "changeme"
 slack_token: "TG2TQ4J9J/BGDGFLW6L/7RBsJPEqiIXRvn1JnHTbx3Jl"
-
+server_ip: "163.172.51.83"
 # Variables will be handled by AWX Surveys
 
 vm_name:

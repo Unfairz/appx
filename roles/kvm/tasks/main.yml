@@ -62,5 +62,27 @@
 - name: Send VM IP
   slack:
     token: "{{ slack_token }}"
-    msg: "AWX Deployment was completed. VM IP address is - {{ vm_ip }}"
+    msg: "AWX Deployment was completed. VM IP address is - {{ vm_ip }}. Adding iptables rules..."
+    channel: '#general'
+
+- name: generate random port
+  become: yes
+  shell: awk -v min=100 -v max=5666 'BEGIN{srand(); print int(min+rand()*(max-min+1))}'
+  register: port
+  set_fact:
+    nat_port: "{{ port.stdout }}"
+
+- name: NAT private IP
+  become: yes
+  shell: iptables -t nat -I PREROUTING -p tcp -d {{server_ip}} --dport {{nat_port}} -j DNAT --to-destination {{vm_ip}}:22 && iptables -I FORWARD -m state -d {{vm_ip}}/24 --state NEW,RELATED,ESTABLISHED -j ACCEPT
+
+- name: save iptables rules
+  become: yes
+  shell: service iptables save
+
+- name: send SSH instructions
+  become: yes
+  slack:
+    token: "{{ slack_token }}"
+    msg: "NAT Rules have been added. SSH using {{ vm_ip }} -p{{nat_port}}. Have fun!"
     channel: '#general'

@@ -69,8 +69,11 @@
   become: yes
   shell: awk -v min=100 -v max=5666 'BEGIN{srand(); print int(min+rand()*(max-min+1))}'
   register: port
+
+- name: facter random port
+  become: yes
   set_fact:
-    nat_port: "{{ port.stdout }}"
+    nat_port: "{{ port.stdout}}"
 
 - name: NAT private IP
   become: yes
@@ -84,5 +87,5 @@
   become: yes
   slack:
     token: "{{ slack_token }}"
-    msg: "NAT Rules have been added. SSH using {{ vm_ip }} -p{{nat_port}}. Have fun!"
+    msg: "NAT Rules have been added. SSH using {{ vm_ip }} -p {{nat_port}}. Have fun!"
     channel: '#general'

@@ -3,7 +3,7 @@
 
 vm_location: "/var/lib/libvirt/images/"
 root_pass: "changeme"
-slack_token: "TG2TQ4J9J/BGDGFLW6L/7RBsJPEqiIXRvn1JnHTbx3Jl"
+slack_token: "<token>"
 
 
 guests:
